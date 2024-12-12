@@ -15,7 +15,9 @@ CREATE TABLE pos_masuk (
     perihal TEXT NOT NULL,
     asal_surat VARCHAR(255) NOT NULL,
     file_surat VARCHAR(255) NOT NULL,
-    keterangan TEXT
+    keterangan TEXT,
+    nomor_surat VARCHAR(100),
+    tipe_surat ENUM('umum', 'dana') DEFAULT 'umum'
 );
 
 CREATE TABLE pos_keluar (
@@ -41,16 +43,39 @@ CREATE TABLE disposisi (
     FOREIGN KEY (surat_masuk_id) REFERENCES pos_masuk(id) ON DELETE CASCADE
 );
 
--- Tambahkan trigger untuk auto-increment nomor_urut
+-- Tambahkan kolom untuk tracking nomor urut terpisah
+ALTER TABLE disposisi ADD COLUMN nomor_urut_umum INT;
+ALTER TABLE disposisi ADD COLUMN nomor_urut_dana INT;
+
+-- Hapus trigger lama
+DROP TRIGGER IF EXISTS before_insert_disposisi;
+
+-- Buat trigger baru yang memisahkan nomor urut
 DELIMITER //
 CREATE TRIGGER before_insert_disposisi
 BEFORE INSERT ON disposisi
 FOR EACH ROW
 BEGIN
-    SET NEW.nomor_urut = (
-        SELECT COALESCE(MAX(nomor_urut), 0) + 1
-        FROM disposisi
-    );
+    DECLARE tipe_surat VARCHAR(10);
+    
+    -- Ambil tipe surat dari pos_masuk
+    SELECT tipe_surat INTO tipe_surat
+    FROM pos_masuk
+    WHERE id = NEW.surat_masuk_id;
+    
+    IF tipe_surat = 'dana' THEN
+        SET NEW.nomor_urut_dana = (
+            SELECT COALESCE(MAX(nomor_urut_dana), 0) + 1
+            FROM disposisi
+        );
+        SET NEW.nomor_urut = NEW.nomor_urut_dana;
+    ELSE
+        SET NEW.nomor_urut_umum = (
+            SELECT COALESCE(MAX(nomor_urut_umum), 0) + 1
+            FROM disposisi
+        );
+        SET NEW.nomor_urut = NEW.nomor_urut_umum;
+    END IF;
 END//
 DELIMITER ;
 

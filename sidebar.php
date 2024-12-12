@@ -33,6 +33,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <i class="bi bi-send-fill"></i>
             <span>Surat Keluar</span>
         </a>
+        <a href="surat_masuk_dana.php" class="nav-link <?php echo $current_page == 'surat_masuk_dana.php' ? 'active' : ''; ?>">
+            <i class="bi bi-inbox-fill"></i>
+            <span>Surat Masuk Dana</span>
+        </a>
 
         <?php if (!isset($_SESSION['user_id'])): ?>
             <a href="login.php" class="nav-link logout-link">

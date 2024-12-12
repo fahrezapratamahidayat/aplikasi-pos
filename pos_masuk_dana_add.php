@@ -33,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception("Tanggal harus diisi!");
             }
 
-            // Tambahkan validasi nomor surat
             if(empty($nomor_surat)) {
                 throw new Exception("Nomor surat harus diisi!");
             }
@@ -68,9 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception("File surat harus diupload!");
             }
 
-            // masukan surat masukk
+            // masukan surat masuk dengan tipe_surat = 'dana'
             $query = "INSERT INTO pos_masuk (tanggal, nomor_surat, jenis_surat, perihal, asal_surat, file_surat, keterangan, tipe_surat) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, 'umum')";
+                     VALUES (?, ?, ?, ?, ?, ?, ?, 'dana')";
             
             $stmt = mysqli_prepare($conn, $query);
             mysqli_stmt_bind_param($stmt, "sssssss", $tanggal, $nomor_surat, $jenis_surat, $perihal, $asal_surat, $file_surat, $keterangan);
@@ -97,14 +96,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception("Gagal menyimpan disposisi!");
             }
 
-            mysqli_commit($conn); // commit lamun behasil
-            header("Location: surat_masuk.php");
+            mysqli_commit($conn);
+            header("Location: surat_masuk_dana.php");
             exit();
 
         } catch (Exception $e) {
-            mysqli_rollback($conn); // rollback lamun error
+            mysqli_rollback($conn);
             if (isset($file_surat) && file_exists($target_dir . $file_surat)) {
-                unlink($target_dir . $file_surat); // Hapus file soalna error
+                unlink($target_dir . $file_surat);
             }
             $error = $e->getMessage();
         }
@@ -114,9 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Tambah Surat Masuk - Sistem arsip surat</title>
+    <title>Tambah Surat Masuk Dana - Sistem arsip surat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -500,9 +498,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 object-fit: contain;
             }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 <body>
     <div class="wrapper">
         <?php include 'sidebar.php'; ?>
@@ -525,7 +521,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0"><i class="bi bi-plus-circle-fill me-2"></i>Tambah Surat Masuk</h4>
+                        <h4 class="mb-0"><i class="bi bi-plus-circle-fill me-2"></i>Tambah Surat Masuk Dana</h4>
                     </div>
                     <div class="card-body">
                         <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -597,7 +593,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="col-12">
                                     <hr class="my-4">
                                     <div class="d-flex justify-content-end gap-2">
-                                        <a href="surat_masuk.php" class="btn btn-secondary">
+                                        <a href="surat_masuk_dana.php" class="btn btn-secondary">
                                             <i class="bi bi-arrow-left me-1"></i>Kembali
                                         </a>
                                         <button type="submit" name="submit_surat" class="btn btn-primary">
@@ -615,31 +611,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Toggle Sidebar
         document.getElementById('sidebarToggle').addEventListener('click', function () {
             document.querySelector('.sidebar').classList.toggle('active');
             document.querySelector('.main-content').classList.toggle('active');
         });
-
-        <?php if(isset($_SESSION['show_disposisi']) && $_SESSION['show_disposisi']): ?>
-
-        $(document).ready(function(){
-            var disposisiModal = new bootstrap.Modal(document.getElementById('disposisiModal'), {
-                backdrop: 'static',
-                keyboard: false
-            });
-            disposisiModal.show();
-        });
-        <?php 
-            unset($_SESSION['show_disposisi']);
-        endif; 
-        ?>
-
-        document.getElementById('disposisiForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            this.submit();
-        });
     </script>
 </body>
-
-</html>
+</html> 

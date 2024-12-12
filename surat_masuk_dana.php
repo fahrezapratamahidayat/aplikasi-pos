@@ -12,16 +12,32 @@ if (!$conn) {
 }
 
 $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
+
+// Copy fungsi numberToRoman dari file sebelumnya
+function numberToRoman($number) {
+    $map = array(
+        'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
+        'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40,
+        'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1
+    );
+    $result = '';
+    foreach ($map as $roman => $value) {
+        while ($number >= $value) {
+            $result .= $roman;
+            $number -= $value;
+        }
+    }
+    return $result;
+}
 ?>
 
 <!DOCTYPE html>
 <html>
-
-<head></head>
-<title>Surat Masuk - Sistem arsip surat</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-<style>
+<head>
+    <title>Surat Masuk Dana - Sistem arsip surat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
     :root {
         --primary-color: #2C3E50;
         --secondary-color: #34495E;
@@ -538,25 +554,17 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
         }
 </style>
 </head>
-
 <body>
     <div class="wrapper">
         <?php include 'sidebar.php'; ?>
 
         <div class="main-content">
-            <div class="top-navbar">
-                <button class="btn btn-link d-lg-none" id="sidebarToggle">
-                    <i class="bi bi-list fs-4"></i>
-                </button>
-                <img src="public/logo.JPG" alt="logo" style="width: 40px; height: 40px; object-fit: contain;">
-            </div>
-
             <div class="container py-4">
                 <div class="row mb-4">
                     <div class="col">
                         <?php if ($user_role == 'admin'): ?>
-                            <a href="pos_masuk_add.php" class="btn btn-primary">
-                                <i class="bi bi-plus-circle-fill"></i> Tambah Surat Masuk
+                            <a href="pos_masuk_dana_add.php" class="btn btn-primary">
+                                <i class="bi bi-plus-circle-fill"></i> Tambah Surat Masuk Dana
                             </a>
                         <?php endif; ?>
                     </div>
@@ -565,20 +573,8 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0"><i class="bi bi-inbox-fill me-2"></i>Data Surat Masuk</h4>
-                            <form action="" method="GET" class="d-flex gap-2" style="max-width: 500px;">
-                                <input type="text" name="search" class="form-control"
-                                    placeholder="Cari nomor surat atau perihal..."
-                                    value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                                <?php if (isset($_GET['search'])): ?>
-                                    <a href="surat_masuk.php" class="btn btn-secondary">
-                                        <i class="bi bi-x-circle"></i>
-                                    </a>
-                                <?php endif; ?>
-                            </form>
+                            <h4 class="mb-0"><i class="bi bi-inbox-fill me-2"></i>Data Surat Masuk Dana</h4>
+                            <!-- Form pencarian -->
                         </div>
                     </div>
                     <div class="card-body">
@@ -605,11 +601,11 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
                                     <?php
                                     $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
                                     $query = "SELECT sm.*, d.tanggal_masuk, d.nomor_urut, d.dari, d.tujuan,
-                                              DATE_FORMAT(d.tanggal_masuk, '%m') as bulan,
-                                              YEAR(d.tanggal_masuk) as tahun
-                                              FROM pos_masuk sm 
-                                              LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id
-                                              WHERE sm.tipe_surat = 'umum'";
+                                             DATE_FORMAT(d.tanggal_masuk, '%m') as bulan,
+                                             YEAR(d.tanggal_masuk) as tahun
+                                             FROM pos_masuk sm 
+                                             LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id
+                                             WHERE sm.tipe_surat = 'dana'";
 
                                     if (!empty($search)) {
                                         $query .= " AND (sm.perihal LIKE '%$search%' OR sm.nomor_surat LIKE '%$search%')";
@@ -619,23 +615,6 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
                                     $result = mysqli_query($conn, $query);
                                     $no = 1;
 
-                                    // Tambahkan fungsi untuk konversi angka ke romawi
-                                    function numberToRoman($number) {
-                                        $map = array(
-                                            'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
-                                            'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40,
-                                            'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1
-                                        );
-                                        $result = '';
-                                        foreach ($map as $roman => $value) {
-                                            while ($number >= $value) {
-                                                $result .= $roman;
-                                                $number -= $value;
-                                            }
-                                        }
-                                        return $result;
-                                    }
-
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr>";
                                         echo "<td>" . $no++ . "</td>";
@@ -643,40 +622,27 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
                                         echo "<td>" . date('d/m/Y', strtotime($row['tanggal'])) . "</td>";
                                         echo "<td>" . $row['nomor_surat'] . "</td>";
                                         
-                                        // Generate dan tampilkan nomor agenda
+                                        // Generate nomor agenda dengan format berbeda untuk surat dana
                                         $nomor_urut = str_pad($row['nomor_urut'], 4, '0', STR_PAD_LEFT);
                                         $bulan_romawi = numberToRoman(intval($row['bulan']));
-                                        $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$row['tahun']}";
+                                        $nomor_agenda = "{$nomor_urut}/D/FSI-UNJANI/{$bulan_romawi}/{$row['tahun']}";
                                         echo "<td>" . $nomor_agenda . "</td>";
                                         
+                                        // Lanjutkan dengan kolom lainnya...
                                         echo "<td>" . $row['jenis_surat'] . "</td>";
                                         echo "<td><a href='uploads/" . $row['file_surat'] . "' target='_blank' class='btn btn-sm btn-info'><i class='bi bi-eye'></i> Lihat</a></td>";
                                         echo "<td>" . ($row['dari'] ?? $row['asal_surat']) . "</td>";
                                         echo "<td>" . $row['perihal'] . "</td>";
                                         echo "<td>" . ($row['tujuan'] ?? '-') . "</td>";
+                                        
+                                        // Tombol aksi
                                         if ($user_role == 'admin') {
                                             echo "<td class='actions'>
                                                 <div class='d-flex gap-1'>
-                                                    <a href='pos_masuk_edit.php?id=" . $row['id'] . "' class='btn btn-sm btn-warning' title='Edit'>
-                                                        <i class='bi bi-pencil'>
-                                                        Edit
-                                                        </i>
-                                                    </a>
-                                                    <a href='pos_masuk_delete.php?id=" . $row['id'] . "' class='btn btn-sm btn-danger' onclick='return confirm(\"Yakin hapus?\")' title='Hapus'>
-                                                        <i class='bi bi-trash'>
-                                                        Hapus
-                                                        </i>
-                                                    </a>
-                                                    <a href='disposisi_view.php?id=" . $row['id'] . "' class='btn btn-sm btn-info' title='Lihat Disposisi'>
-                                                        <i class='bi bi-eye'>
-                                                        Dispo
-                                                        </i>
-                                                    </a>
-                                                    <a href='disposisi_print.php?id=" . $row['id'] . "' class='btn btn-sm btn-success' target='_blank' title='Print Disposisi'>
-                                                        <i class='bi bi-printer'>
-                                                        print
-                                                        </i>
-                                                    </a>
+                                                    <a href='pos_masuk_dana_edit.php?id=" . $row['id'] . "' class='btn btn-sm btn-warning'><i class='bi bi-pencil'>Edit</i></a>
+                                                    <a href='pos_masuk_delete.php?id=" . $row['id'] . "' class='btn btn-sm btn-danger' onclick='return confirm(\"Yakin hapus?\")'><i class='bi bi-trash'>Hapus</i></a>
+                                                    <a href='disposisi_view.php?id=" . $row['id'] . "' class='btn btn-sm btn-info'><i class='bi bi-eye'>Dispo</i></a>
+                                                    <a href='disposisi_print.php?id=" . $row['id'] . "' class='btn btn-sm btn-success' target='_blank'><i class='bi bi-printer'>Print</i></a>
                                                 </div>
                                             </td>";
                                         }
@@ -701,5 +667,4 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
         });
     </script>
 </body>
-
-</html>
+</html> 

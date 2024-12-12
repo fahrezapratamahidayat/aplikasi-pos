@@ -20,7 +20,8 @@ $id = $_GET['id'];
 
 $query = "SELECT sm.*, d.*, 
           DATE_FORMAT(sm.tanggal, '%d/%m/%Y') as tanggal_surat,
-          DATE_FORMAT(d.tanggal_masuk, '%d/%m/%Y') as tgl_masuk
+          DATE_FORMAT(d.tanggal_masuk, '%d/%m/%Y') as tgl_masuk,
+          sm.tipe_surat
           FROM pos_masuk sm 
           LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id 
           WHERE sm.id = $id";
@@ -54,9 +55,17 @@ $bulan = date('n', strtotime($data['tanggal_masuk'])); // Ambil bulan dari tangg
 $tahun = date('Y', strtotime($data['tanggal_masuk'])); // Ambil tahun
 $bulan_romawi = numberToRoman($bulan); // Konversi bulan ke romawi
 
-// Generate nomor agenda
-$nomor_urut = str_pad($data['nomor_urut'], 4, '0', STR_PAD_LEFT);
-$nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
+// Generate nomor agenda berdasarkan tipe surat
+if ($data['tipe_surat'] == 'dana') {
+    $nomor_urut = str_pad($data['nomor_urut_dana'], 4, '0', STR_PAD_LEFT);
+} else {
+    $nomor_urut = str_pad($data['nomor_urut_umum'], 4, '0', STR_PAD_LEFT);
+}
+if ($data['tipe_surat'] == 'dana') {
+    $nomor_agenda = "{$nomor_urut}/D/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
+} else {
+    $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
+}
 ?>
 
 <!DOCTYPE html>
@@ -94,7 +103,6 @@ $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
 
         .info-table td {
             padding: 5px;
-            border: 1px solid #000;
         }
 
         .disposisi-table {
@@ -185,7 +193,7 @@ $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
             <td>Lampiran</td>
             <td>: </td>
             <td>No Surat</td>
-            <td>: <?php echo $data['nomor_agenda']; ?></td>
+            <td>: <?php echo $data['nomor_surat']; ?></td>
         </tr>
         <tr>
             <td>Perihal</td>

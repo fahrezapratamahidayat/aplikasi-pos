@@ -16,10 +16,29 @@ if (!$conn) {
     die("Koneksi database gagal: " . mysqli_connect_error());
 }
 
+function numberToRoman($number) {
+    $map = array(
+        'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
+        'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40,
+        'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1
+    );
+    $result = '';
+    foreach ($map as $roman => $value) {
+        while ($number >= $value) {
+            $result .= $roman;
+            $number -= $value;
+        }
+    }
+    return $result;
+}
+
 $id = $_GET['id'];
 
 // Ambil data surat masuk dan disposisi menggunakan joinnn
-$query = "SELECT sm.*, d.* 
+$query = "SELECT sm.*, d.*, 
+          DATE_FORMAT(d.tanggal_masuk, '%m') as bulan,
+          YEAR(d.tanggal_masuk) as tahun,
+          sm.tipe_surat
           FROM pos_masuk sm 
           LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id 
           WHERE sm.id = $id";
@@ -515,7 +534,26 @@ if (!$data) {
                                 <table class="table table-borderless">
                                     <tr>
                                         <td width="150">Nomor Agenda</td>
-                                        <td>: <?php echo $data['nomor_agenda']; ?></td>
+                                        <?php
+                                        if ($data['tipe_surat'] == 'dana') {
+                                            $nomor_urut = str_pad($data['nomor_urut_dana'], 4, '0', STR_PAD_LEFT);
+                                        } else {
+                                            $nomor_urut = str_pad($data['nomor_urut_umum'], 4, '0', STR_PAD_LEFT);
+                                        }
+                                        $bulan_romawi = numberToRoman(intval($data['bulan']));
+
+                                        // Format nomor agenda berdasarkan tipe surat
+                                        if ($data['tipe_surat'] == 'dana') {
+                                            $nomor_agenda = "{$nomor_urut}/D/FSI-UNJANI/{$bulan_romawi}/{$data['tahun']}";
+                                        } else {
+                                            $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$data['tahun']}";
+                                        }
+                                        ?>
+                                        <td>: <?php echo $nomor_agenda; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nomor Surat</td>
+                                        <td>: <?php echo $data['nomor_surat']; ?></td>
                                     </tr>
                                     <tr>
                                         <td>Tanggal Masuk</td>
