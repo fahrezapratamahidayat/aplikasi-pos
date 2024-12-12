@@ -31,13 +31,28 @@ CREATE TABLE pos_keluar (
 CREATE TABLE disposisi (
     id INT PRIMARY KEY AUTO_INCREMENT,
     surat_masuk_id INT,
+    nomor_urut INT NOT NULL,
     nomor_agenda VARCHAR(50),
     dari VARCHAR(255),
     tanggal_masuk DATE,
     perihal TEXT,
     tujuan VARCHAR(255),
+    nomor_surat VARCHAR(50),
     FOREIGN KEY (surat_masuk_id) REFERENCES pos_masuk(id) ON DELETE CASCADE
 );
+
+-- Tambahkan trigger untuk auto-increment nomor_urut
+DELIMITER //
+CREATE TRIGGER before_insert_disposisi
+BEFORE INSERT ON disposisi
+FOR EACH ROW
+BEGIN
+    SET NEW.nomor_urut = (
+        SELECT COALESCE(MAX(nomor_urut), 0) + 1
+        FROM disposisi
+    );
+END//
+DELIMITER ;
 
 INSERT INTO users (username, password, role) VALUES
 ('admin', 'admin123', 'admin'),

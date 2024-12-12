@@ -31,6 +31,32 @@ if (!$data) {
     header("Location: surat_masuk.php");
     exit();
 }
+
+// Tambahkan fungsi untuk konversi angka ke romawi
+function numberToRoman($number) {
+    $map = array(
+        'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
+        'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40,
+        'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1
+    );
+    $result = '';
+    foreach ($map as $roman => $value) {
+        while ($number >= $value) {
+            $result .= $roman;
+            $number -= $value;
+        }
+    }
+    return $result;
+}
+
+// Setelah query data, tambahkan:
+$bulan = date('n', strtotime($data['tanggal_masuk'])); // Ambil bulan dari tanggal masuk
+$tahun = date('Y', strtotime($data['tanggal_masuk'])); // Ambil tahun
+$bulan_romawi = numberToRoman($bulan); // Konversi bulan ke romawi
+
+// Generate nomor agenda
+$nomor_urut = str_pad($data['nomor_urut'], 4, '0', STR_PAD_LEFT);
+$nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
 ?>
 
 <!DOCTYPE html>
@@ -46,49 +72,54 @@ if (!$data) {
             font-size: 12px;
         }
 
-        .header {
+        .title {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .nomor-surat {
             text-align: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            position: relative;
-        }
-
-        .header img {
-            height: 60px;
-            position: absolute;
-            top: 0;
-        }
-
-        .header img.left-logo {
-            left: 0;
-        }
-
-        .header img.right-logo {
-            right: 0;
-        }
-
-        .header h2 {
-            margin: 5px 0;
-            font-size: 16px;
-        }
-
-        .header p {
-            margin: 3px 0;
             font-size: 12px;
         }
 
-        table {
+        .info-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
             font-size: 11px;
         }
 
-        table td, table th {
+        .info-table td {
+            padding: 5px;
+            border: 1px solid #000;
+        }
+
+        .disposisi-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 11px;
+        }
+
+        .disposisi-table td, .disposisi-table th {
             padding: 5px;
             border: 1px solid #000;
             vertical-align: top;
+        }
+
+        .disposisi-table td:first-child {
+            width: 30%;
+        }
+
+        .disposisi-table td:nth-child(2) {
+            width: 35%;
+        }
+
+        .disposisi-table td:nth-child(3) {
+            width: 35%;
         }
 
         .yth-section {
@@ -122,50 +153,89 @@ if (!$data) {
             width: 150px;
             margin: 50px auto 5px;
         }
+
+        .disposisi-table td.isi-disposisi {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .disposisi-column {
+            width: 48%;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <img src="logo-kiri.png" alt="Logo Kiri" class="left-logo">
-        <img src="logo-kanan.png" alt="Logo Kanan" class="right-logo">
-        <h2>YAYASAN KARTIKA EKA PAKSI</h2>
-        <p>UNIVERSITAS JENDERAL ACHMAD YANI (UNJANI)</p>
-        <p>FAKULTAS SAINS DAN INFORMATIKA (FSI)</p>
-        <p>Kampus Cimahi : Jl. Terusan Jenderal Sudirman P.O.BOX 148 Telp. (022) 6650646</p>
-        <h2>LEMBAR DISPOSISI</h2>
-    </div>
+    <div class="title">LEMBAR DISPOSISI</div>
+    <div class="nomor-surat">Nomor: <?php echo $nomor_agenda; ?></div>
 
-    <table>
+    <table class="info-table">
         <tr>
-            <td class="label">Tanggal Masuk</td>
-            <td>: <?php echo date('d/m/Y', strtotime($data['tanggal_masuk'])); ?></td>
-            <td class="label">Tanggal Surat</td>
-            <td>: <?php echo date('d/m/Y', strtotime($data['tanggal'])); ?></td>
+            <td width="20%">Tanggal Masuk</td>
+            <td width="30%">: <?php echo $data['tgl_masuk']; ?></td>
+            <td width="20%">Dari</td>
+            <td width="30%">: <?php echo $data['dari']; ?></td>
         </tr>
         <tr>
-            <td class="label">Dari</td>
-            <td>: Rektor Unjani</td>
-            <td class="label">Dituju Yth</td>
-            <td>: Dekan FSI</td>
+            <td>Tanggal Surat</td>
+            <td>: <?php echo $data['tanggal_surat']; ?></td>
+            <td>Ditujukan Yth</td>
+            <td>: <?php echo $data['tujuan']; ?></td>
         </tr>
         <tr>
-            <td class="label">Nomor Surat</td>
-            <td>: B/1364/Unjani/X/2024</td>
-            <td class="label">Perihal</td>
-            <td>: Undangan Pembukaan dan Penutupan LDKK</td>
+            <td>Lampiran</td>
+            <td>: </td>
+            <td>No Surat</td>
+            <td>: <?php echo $data['nomor_agenda']; ?></td>
+        </tr>
+        <tr>
+            <td>Perihal</td>
+            <td colspan="3">: <?php echo $data['perihal']; ?></td>
         </tr>
     </table>
 
-    <table>
+    <table class="disposisi-table">
         <tr>
-            <th>Diteruskan Kepada Yth</th>
-            <th>ISI DISPOSISI</th>
+            <th>Diteruskan Kepada</th>
+            <th colspan="2">Isi Disposisi</th>
         </tr>
         <tr>
-            <td>Wakil Dekan I</td>
-            <td>Untuk Diketahui</td>
+            <td>
+                 Wakil Dekan 1<br>
+                 Wakil Dekan 2<br>
+                 Wakil Dekan 3<br>
+                 Kaprodi 1<br>
+                 Kaprodi 2<br>
+                 Kaprodi 3<br>
+                 Kaprodi 4<br>
+                 Kaprodi 5<br>
+                 Kaprodi 6<br>
+                 Kaur 1<br>
+                 Kaur 2<br>
+                 Kaur 3
+            </td>
+            <td>
+                 Untuk diketahui<br>
+                 Untuk dilaporkan<br>
+                 Untuk ditindaklanjuti<br>
+                 Untuk diproses lebih lanjut<br>
+                 Untuk diarsipkan<br>
+                 Untuk ditelaah dan saran<br>
+                 Untuk dibicarakan dengan saya<br>
+                 Untuk dikoordinasikan<br>
+                 Untuk diselesaikan
+            </td>
+            <td>
+                 Edarkan<br>
+                 Jadwalkan<br>
+                 Pelajari<br>
+                 Persiapkan<br>
+                 Selesaikan<br>
+                 Setuju<br>
+                 Tolak<br>
+                 Tunggu<br>
+                 Monitor
+            </td>
         </tr>
-        <!-- Tambahkan baris lain sesuai kebutuhan -->
     </table>
 
     <div class="yth-section">

@@ -603,24 +603,49 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
                                 <tbody>
                                     <?php
                                     $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-                                    $query = "SELECT sm.*, d.tanggal_masuk, d.nomor_agenda, d.dari, d.tujuan 
-                                             FROM pos_masuk sm 
-                                             LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id";
+                                    $query = "SELECT sm.*, d.tanggal_masuk, d.nomor_urut, d.dari, d.tujuan,
+                                              DATE_FORMAT(d.tanggal_masuk, '%m') as bulan,
+                                              YEAR(d.tanggal_masuk) as tahun
+                                              FROM pos_masuk sm 
+                                              LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id";
 
                                     if (!empty($search)) {
-                                        $query .= " WHERE d.nomor_agenda LIKE '%$search%' 
-                                                    OR sm.perihal LIKE '%$search%'";
+                                        $query .= " WHERE sm.perihal LIKE '%$search%'";
                                     }
 
                                     $query .= " ORDER BY d.tanggal_masuk DESC";
                                     $result = mysqli_query($conn, $query);
                                     $no = 1;
+
+                                    // Tambahkan fungsi untuk konversi angka ke romawi
+                                    function numberToRoman($number) {
+                                        $map = array(
+                                            'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
+                                            'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40,
+                                            'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1
+                                        );
+                                        $result = '';
+                                        foreach ($map as $roman => $value) {
+                                            while ($number >= $value) {
+                                                $result .= $roman;
+                                                $number -= $value;
+                                            }
+                                        }
+                                        return $result;
+                                    }
+
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr>";
                                         echo "<td>" . $no++ . "</td>";
                                         echo "<td>" . ($row['tanggal_masuk'] ? date('d/m/Y', strtotime($row['tanggal_masuk'])) : '-') . "</td>";
                                         echo "<td>" . date('d/m/Y', strtotime($row['tanggal'])) . "</td>";
-                                        echo "<td>" . ($row['nomor_agenda'] ?? '-') . "</td>";
+                                        
+                                        // Generate nomor agenda
+                                        $nomor_urut = str_pad($row['nomor_urut'], 4, '0', STR_PAD_LEFT);
+                                        $bulan_romawi = numberToRoman(intval($row['bulan']));
+                                        $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$row['tahun']}";
+                                        
+                                        echo "<td>" . $nomor_agenda . "</td>";
                                         echo "<td>" . $row['jenis_surat'] . "</td>";
                                         echo "<td><a href='uploads/" . $row['file_surat'] . "' target='_blank' class='btn btn-sm btn-info'><i class='bi bi-eye'></i> Lihat</a></td>";
                                         echo "<td>" . ($row['dari'] ?? $row['asal_surat']) . "</td>";

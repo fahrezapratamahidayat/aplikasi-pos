@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $perihal = $_POST['perihal'];
             $asal_surat = $_POST['asal_surat'];
             $keterangan = $_POST['keterangan'];
-            $nomor_agenda = $_POST['nomor_agenda'];
             $tujuan = $_POST['tujuan'];
+            $nomor_surat = $_POST['nomor_surat'];
 
             if(empty($tanggal)) {
                 throw new Exception("Tanggal harus diisi!");
@@ -66,12 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             mysqli_stmt_close($stmt);
 
             // simpan disposisi
-            $query = "INSERT INTO disposisi (surat_masuk_id, nomor_agenda, dari, tanggal_masuk, perihal, tujuan) 
-                     VALUES (?, ?, ?, ?, ?, ?)";
-            
+            $bulan = date('n', strtotime($tanggal));
+            $tahun = date('Y', strtotime($tanggal));
+
+            // Simpan disposisi dengan nomor urut otomatis
+            $query = "INSERT INTO disposisi (surat_masuk_id, dari, tanggal_masuk, perihal, tujuan, nomor_surat) 
+                      VALUES (?, ?, ?, ?, ?, ?)";
+
             $stmt = mysqli_prepare($conn, $query);
-            mysqli_stmt_bind_param($stmt, "isssss", $surat_id, $nomor_agenda, $asal_surat, $tanggal, $perihal, $tujuan);
-            
+            mysqli_stmt_bind_param($stmt, "isssss", $surat_id, $asal_surat, $tanggal, $perihal, $tujuan, $nomor_surat);
+
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Gagal menyimpan disposisi!");
             }
@@ -517,13 +521,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">
-                                        <i class="bi bi-hash me-1"></i>Nomor Agenda
-                                    </label>
-                                    <input type="text" name="nomor_agenda" class="form-control" required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label class="form-label">
                                         <i class="bi bi-tag me-1"></i>Jenis Surat
                                     </label>
                                     <input type="text" name="jenis_surat" class="form-control" required>
@@ -570,6 +567,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <i class="bi bi-journal-text me-1"></i>Keterangan
                                     </label>
                                     <textarea name="keterangan" class="form-control" rows="3"></textarea>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        <i class="bi bi-hash me-1"></i>Nomor Surat
+                                    </label>
+                                    <input type="text" name="nomor_surat" class="form-control" required 
+                                           placeholder="Contoh: ND/123/FSI-UNJANI">
                                 </div>
 
                                 <div class="col-12">
