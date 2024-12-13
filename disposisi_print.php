@@ -103,6 +103,7 @@ if ($data['tipe_surat'] == 'dana') {
 
         .info-table td {
             padding: 5px;
+            border: 1px solid #000;
         }
 
         .disposisi-table {
