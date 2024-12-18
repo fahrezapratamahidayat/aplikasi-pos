@@ -81,6 +81,12 @@ if ($data['tipe_surat'] == 'dana') {
             font-size: 12px;
         }
 
+        .kop-space {
+            width: 1655px;
+            height: 319px;
+            margin-bottom: 20px;
+        }
+
         .title {
             text-align: center;
             margin-bottom: 5px;
@@ -103,7 +109,6 @@ if ($data['tipe_surat'] == 'dana') {
 
         .info-table td {
             padding: 5px;
-            border: 1px solid #000;
         }
 
         .disposisi-table {
@@ -115,7 +120,7 @@ if ($data['tipe_surat'] == 'dana') {
 
         .disposisi-table td, .disposisi-table th {
             padding: 5px;
-            border: 1px solid #000;
+            border: 0.5px solid #999;
             vertical-align: top;
         }
 
@@ -171,9 +176,28 @@ if ($data['tipe_surat'] == 'dana') {
         .disposisi-column {
             width: 48%;
         }
+
+        .checkbox-item {
+            border-bottom: 0.5px solid #999;
+            margin: 0;
+            padding: 3px 5px;
+            line-height: normal;
+            height: 22px;
+        }
+
+        .disposisi-table td {
+            padding: 0;
+            vertical-align: top;
+        }
+
+        .disposisi-table td, .disposisi-table th {
+            border: 0.5px solid #000;
+        }
     </style>
 </head>
 <body>
+    <div class="kop-space"></div>
+
     <div class="title">LEMBAR DISPOSISI</div>
     <div class="nomor-surat">Nomor: <?php echo $nomor_agenda; ?></div>
 
@@ -204,45 +228,45 @@ if ($data['tipe_surat'] == 'dana') {
 
     <table class="disposisi-table">
         <tr>
-            <th>Diteruskan Kepada</th>
+            <th style="text-align: left;">Diteruskan Kepada</th>
             <th colspan="2">Isi Disposisi</th>
         </tr>
         <tr>
             <td>
-                 Wakil Dekan 1<br>
-                 Wakil Dekan 2<br>
-                 Wakil Dekan 3<br>
-                 Kaprodi 1<br>
-                 Kaprodi 2<br>
-                 Kaprodi 3<br>
-                 Kaprodi 4<br>
-                 Kaprodi 5<br>
-                 Kaprodi 6<br>
-                 Kaur 1<br>
-                 Kaur 2<br>
-                 Kaur 3
+                <div class="checkbox-item">Wakil Dekan 1</div>
+                <div class="checkbox-item">Wakil Dekan 2</div>
+                <div class="checkbox-item">Wakil Dekan 3</div>
+                <div class="checkbox-item">Kaprodi 1</div>
+                <div class="checkbox-item">Kaprodi 2</div>
+                <div class="checkbox-item">Kaprodi 3</div>
+                <div class="checkbox-item">Kaprodi 4</div>
+                <div class="checkbox-item">Kaprodi 5</div>
+                <div class="checkbox-item">Kaprodi 6</div>
+                <div class="checkbox-item">Kaur 1</div>
+                <div class="checkbox-item">Kaur 2</div>
+                <div class="checkbox-item">Kaur 3</div>
             </td>
             <td>
-                 Untuk diketahui<br>
-                 Untuk dilaporkan<br>
-                 Untuk ditindaklanjuti<br>
-                 Untuk diproses lebih lanjut<br>
-                 Untuk diarsipkan<br>
-                 Untuk ditelaah dan saran<br>
-                 Untuk dibicarakan dengan saya<br>
-                 Untuk dikoordinasikan<br>
-                 Untuk diselesaikan
+                <div class="checkbox-item">Untuk diketahui</div>
+                <div class="checkbox-item">Untuk dilaporkan</div>
+                <div class="checkbox-item">Untuk ditindaklanjuti</div>
+                <div class="checkbox-item">Untuk diproses lebih lanjut</div>
+                <div class="checkbox-item">Untuk diarsipkan</div>
+                <div class="checkbox-item">Untuk ditelaah dan saran</div>
+                <div class="checkbox-item">Untuk dibicarakan dengan saya</div>
+                <div class="checkbox-item">Untuk dikoordinasikan</div>
+                <div class="checkbox-item">Untuk diselesaikan</div>
             </td>
             <td>
-                 Edarkan<br>
-                 Jadwalkan<br>
-                 Pelajari<br>
-                 Persiapkan<br>
-                 Selesaikan<br>
-                 Setuju<br>
-                 Tolak<br>
-                 Tunggu<br>
-                 Monitor
+                <div class="checkbox-item">Edarkan</div>
+                <div class="checkbox-item">Jadwalkan</div>
+                <div class="checkbox-item">Pelajari</div>
+                <div class="checkbox-item">Persiapkan</div>
+                <div class="checkbox-item">Selesaikan</div>
+                <div class="checkbox-item">Setuju</div>
+                <div class="checkbox-item">Tolak</div>
+                <div class="checkbox-item">Tunggu</div>
+                <div class="checkbox-item">Monitor</div>
             </td>
         </tr>
     </table>
