@@ -81,8 +81,7 @@ if ($data['tipe_surat'] == 'dana') {
 
         .kop-space {
             width: 1655px;
-            height: 319px;
-            margin-bottom: 20px;
+            height: 219px;
         }
 
         .title {
