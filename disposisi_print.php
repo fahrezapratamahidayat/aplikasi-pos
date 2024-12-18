@@ -33,7 +33,6 @@ if (!$data) {
     exit();
 }
 
-// Tambahkan fungsi untuk konversi angka ke romawi
 function numberToRoman($number) {
     $map = array(
         'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
@@ -50,10 +49,9 @@ function numberToRoman($number) {
     return $result;
 }
 
-// Setelah query data, tambahkan:
-$bulan = date('n', strtotime($data['tanggal_masuk'])); // Ambil bulan dari tanggal masuk
-$tahun = date('Y', strtotime($data['tanggal_masuk'])); // Ambil tahun
-$bulan_romawi = numberToRoman($bulan); // Konversi bulan ke romawi
+$bulan = date('n', strtotime($data['tanggal_masuk']));
+$tahun = date('Y', strtotime($data['tanggal_masuk']));  
+$bulan_romawi = numberToRoman($bulan);
 
 // Generate nomor agenda berdasarkan tipe surat
 if ($data['tipe_surat'] == 'dana') {
@@ -180,9 +178,18 @@ if ($data['tipe_surat'] == 'dana') {
         .checkbox-item {
             border-bottom: 0.5px solid #999;
             margin: 0;
-            padding: 3px 5px;
+            padding: 0;
             line-height: normal;
             height: 22px;
+            display: flex;
+            align-items: center;
+        }
+
+        .item-space {
+            width: 25px;
+            height: 100%;
+            border-right: 0.5px solid #999;
+            margin-right: 8px;
         }
 
         .disposisi-table td {
@@ -228,45 +235,45 @@ if ($data['tipe_surat'] == 'dana') {
 
     <table class="disposisi-table">
         <tr>
-            <th style="text-align: left;">Diteruskan Kepada</th>
+            <th style="text-align: left;">Diteruskan Kepada Yth:</th>
             <th colspan="2">Isi Disposisi</th>
         </tr>
         <tr>
             <td>
-                <div class="checkbox-item">Wakil Dekan 1</div>
-                <div class="checkbox-item">Wakil Dekan 2</div>
-                <div class="checkbox-item">Wakil Dekan 3</div>
-                <div class="checkbox-item">Kaprodi 1</div>
-                <div class="checkbox-item">Kaprodi 2</div>
-                <div class="checkbox-item">Kaprodi 3</div>
-                <div class="checkbox-item">Kaprodi 4</div>
-                <div class="checkbox-item">Kaprodi 5</div>
-                <div class="checkbox-item">Kaprodi 6</div>
-                <div class="checkbox-item">Kaur 1</div>
-                <div class="checkbox-item">Kaur 2</div>
-                <div class="checkbox-item">Kaur 3</div>
+                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan 1</div>
+                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan 2</div>
+                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan 3</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 1</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 2</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 3</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 4</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 5</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 6</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaur 1</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaur 2</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaur 3</div>
             </td>
             <td>
-                <div class="checkbox-item">Untuk diketahui</div>
-                <div class="checkbox-item">Untuk dilaporkan</div>
-                <div class="checkbox-item">Untuk ditindaklanjuti</div>
-                <div class="checkbox-item">Untuk diproses lebih lanjut</div>
-                <div class="checkbox-item">Untuk diarsipkan</div>
-                <div class="checkbox-item">Untuk ditelaah dan saran</div>
-                <div class="checkbox-item">Untuk dibicarakan dengan saya</div>
-                <div class="checkbox-item">Untuk dikoordinasikan</div>
-                <div class="checkbox-item">Untuk diselesaikan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk diketahui</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk dilaporkan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk ditindaklanjuti</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk diproses lebih lanjut</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk diarsipkan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk ditelaah dan saran</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk dibicarakan dengan saya</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk dikoordinasikan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Untuk diselesaikan</div>
             </td>
             <td>
-                <div class="checkbox-item">Edarkan</div>
-                <div class="checkbox-item">Jadwalkan</div>
-                <div class="checkbox-item">Pelajari</div>
-                <div class="checkbox-item">Persiapkan</div>
-                <div class="checkbox-item">Selesaikan</div>
-                <div class="checkbox-item">Setuju</div>
-                <div class="checkbox-item">Tolak</div>
-                <div class="checkbox-item">Tunggu</div>
-                <div class="checkbox-item">Monitor</div>
+                <div class="checkbox-item"><span class="item-space"></span>Edarkan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Jadwalkan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Pelajari</div>
+                <div class="checkbox-item"><span class="item-space"></span>Persiapkan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Selesaikan</div>
+                <div class="checkbox-item"><span class="item-space"></span>Setuju</div>
+                <div class="checkbox-item"><span class="item-space"></span>Tolak</div>
+                <div class="checkbox-item"><span class="item-space"></span>Tunggu</div>
+                <div class="checkbox-item"><span class="item-space"></span>Monitor</div>
             </td>
         </tr>
     </table>
