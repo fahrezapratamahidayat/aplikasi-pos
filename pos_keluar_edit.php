@@ -23,6 +23,7 @@ $data = mysqli_fetch_assoc($result);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tanggal = $_POST['tanggal'];
+    $tanggal_dibuat = $_POST['tanggal_dibuat'];
     $jenis_surat = $_POST['jenis_surat'];
     $perihal = $_POST['perihal'];
     $tujuan_surat = $_POST['tujuan_surat'];
@@ -45,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $query = "UPDATE pos_keluar SET 
               tanggal = '$tanggal',
+              tanggal_dibuat = '$tanggal_dibuat',
               jenis_surat = '$jenis_surat',
               perihal = '$perihal',
               tujuan_surat = '$tujuan_surat',
@@ -638,10 +640,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="row g-4">
                                 <div class="col-md-6">
                                     <label class="form-label">
-                                        <i class="bi bi-calendar3 me-1"></i>Tanggal
+                                        <i class="bi bi-calendar3 me-1"></i>Tanggal Surat
                                     </label>
                                     <input type="date" name="tanggal" class="form-control"
                                         value="<?php echo $data['tanggal']; ?>" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar3 me-1"></i>Tanggal Dibuat
+                                    </label>
+                                    <input type="date" name="tanggal_dibuat" class="form-control"
+                                        value="<?php echo $data['tanggal_dibuat']; ?>" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">

@@ -600,7 +600,7 @@ function numberToRoman($number) {
                                 <tbody>
                                     <?php
                                     $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-                                    $query = "SELECT sm.*, d.tanggal_masuk, d.nomor_urut, d.dari, d.tujuan,
+                                    $query = "SELECT sm.*, d.tanggal_masuk as disposisi_tanggal_masuk, d.nomor_urut, d.dari, d.tujuan,
                                              DATE_FORMAT(d.tanggal_masuk, '%m') as bulan,
                                              YEAR(d.tanggal_masuk) as tahun
                                              FROM pos_masuk sm 

@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         try {
             // Simpan surat masuk terlebih dahulu
             $tanggal = $_POST['tanggal'];
+            $tanggal_masuk = $_POST['tanggal_masuk'];
             $nomor_surat = $_POST['nomor_surat'];
             $jenis_surat = $_POST['jenis_surat'];
             $perihal = $_POST['perihal'];
@@ -69,11 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             // masukan surat masukk
-            $query = "INSERT INTO pos_masuk (tanggal, nomor_surat, jenis_surat, perihal, asal_surat, file_surat, keterangan, tipe_surat) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, 'umum')";
+            $query = "INSERT INTO pos_masuk (tanggal, tanggal_masuk, nomor_surat, jenis_surat, perihal, asal_surat, file_surat, keterangan, tipe_surat) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'umum')";
             
             $stmt = mysqli_prepare($conn, $query);
-            mysqli_stmt_bind_param($stmt, "sssssss", $tanggal, $nomor_surat, $jenis_surat, $perihal, $asal_surat, $file_surat, $keterangan);
+            mysqli_stmt_bind_param($stmt, "ssssssss", $tanggal, $tanggal_masuk, $nomor_surat, $jenis_surat, $perihal, $asal_surat, $file_surat, $keterangan);
             
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Gagal menyimpan surat masuk!");
@@ -532,10 +533,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="row g-4">
                                 <div class="col-md-6">
                                     <label class="form-label">
-                                        <i class="bi bi-calendar3 me-1"></i>Tanggal
+                                        <i class="bi bi-calendar3 me-1"></i>Tanggal Surat
                                     </label>
                                     <input type="date" name="tanggal" class="form-control" required>
                                 </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar3 me-1"></i>Tanggal Masuk
+                                    </label>
+                                    <input type="date" name="tanggal_masuk" class="form-control" value="<?php echo date('Y-m-d'); ?>" required>
+                                </div>
+
                                 <div class="col-md-6">
                                     <label class="form-label">
                                         <i class="bi bi-hash me-1"></i>Nomor Surat

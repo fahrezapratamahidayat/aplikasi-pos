@@ -11,6 +11,7 @@ CREATE TABLE users (
 CREATE TABLE pos_masuk (
     id INT PRIMARY KEY AUTO_INCREMENT,
     tanggal DATE NOT NULL,
+    tanggal_masuk DATE,
     jenis_surat VARCHAR(100) NOT NULL,
     perihal TEXT NOT NULL,
     asal_surat VARCHAR(255) NOT NULL,
@@ -23,6 +24,7 @@ CREATE TABLE pos_masuk (
 CREATE TABLE pos_keluar (
     id INT PRIMARY KEY AUTO_INCREMENT,
     tanggal DATE NOT NULL,
+    tanggal_dibuat DATE,
     jenis_surat VARCHAR(100) NOT NULL,
     perihal TEXT NOT NULL,
     tujuan_surat VARCHAR(255) NOT NULL,
@@ -43,14 +45,14 @@ CREATE TABLE disposisi (
     FOREIGN KEY (surat_masuk_id) REFERENCES pos_masuk(id) ON DELETE CASCADE
 );
 
--- Tambahkan kolom untuk tracking nomor urut terpisah
 ALTER TABLE disposisi ADD COLUMN nomor_urut_umum INT;
 ALTER TABLE disposisi ADD COLUMN nomor_urut_dana INT;
 
--- Hapus trigger lama
+ALTER TABLE disposisi ADD COLUMN ttd_pejabat VARCHAR(255);
+
 DROP TRIGGER IF EXISTS before_insert_disposisi;
 
--- Buat trigger baru yang memisahkan nomor urut
+
 DELIMITER //
 CREATE TRIGGER before_insert_disposisi
 BEFORE INSERT ON disposisi
@@ -58,7 +60,6 @@ FOR EACH ROW
 BEGIN
     DECLARE tipe_surat VARCHAR(10);
     
-    -- Ambil tipe surat dari pos_masuk
     SELECT tipe_surat INTO tipe_surat
     FROM pos_masuk
     WHERE id = NEW.surat_masuk_id;

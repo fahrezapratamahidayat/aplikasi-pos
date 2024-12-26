@@ -34,7 +34,6 @@ function numberToRoman($number) {
 
 $id = $_GET['id'];
 
-// Ambil data surat masuk dan disposisi menggunakan joinnn
 $query = "SELECT sm.*, d.*, 
           DATE_FORMAT(d.tanggal_masuk, '%m') as bulan,
           YEAR(d.tanggal_masuk) as tahun,

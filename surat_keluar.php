@@ -543,7 +543,8 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Tanggal</th>
+                                        <th>Tanggal Dibuat</th>
+                                        <th>Tanggal Surat</th>
                                         <th>Jenis Surat</th>
                                         <th>Perihal</th>
                                         <th>Tujuan Surat</th>
@@ -564,12 +565,13 @@ $user_role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
                                                             OR perihal LIKE '%$search%'";
                                     }
 
-                                    $query .= " ORDER BY tanggal DESC";
+                                    $query .= " ORDER BY tanggal_dibuat DESC";
                                     $result = mysqli_query($conn, $query);
                                     $no = 1;
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr>";
                                         echo "<td>" . $no++ . "</td>";
+                                        echo "<td>" . date('d/m/Y', strtotime($row['tanggal_dibuat'])) . "</td>";
                                         echo "<td>" . date('d/m/Y', strtotime($row['tanggal'])) . "</td>";
                                         echo "<td>" . $row['jenis_surat'] . "</td>";
                                         echo "<td>" . $row['perihal'] . "</td>";

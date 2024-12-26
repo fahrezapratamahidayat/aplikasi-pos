@@ -199,6 +199,26 @@ if ($data['tipe_surat'] == 'dana') {
         .disposisi-table td, .disposisi-table th {
             border: 0.5px solid #000;
         }
+
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+        
+        @media print {
+            .no-print, .form-select {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -295,8 +315,25 @@ if ($data['tipe_surat'] == 'dana') {
         </div>
         
         <div class="ttd">
+            <?php if (!isset($_GET['preview'])): ?>
+                <form id="ttdForm">
+                    <select id="ttdSelect" class="form-select mb-3" onchange="updateTTD()">
+                        <option value="">Pilih Tanda Tangan</option>
+                        <option value="ttddani.jpg" <?php echo ($data['ttd_pejabat'] == 'ttddani.jpg' ? 'selected' : ''); ?>>Dani</option>
+                        <option value="ttdmuhidan.jpg" <?php echo ($data['ttd_pejabat'] == 'ttdmuhidan.jpg' ? 'selected' : ''); ?>>Muhidan</option>
+                    </select>
+                </form>
+            <?php endif; ?>
+            
             <p>Kaur. Administrasi Umum</p>
-            <div class="ttd-line"></div>
+            <?php if (isset($data['ttd_pejabat']) && !empty($data['ttd_pejabat'])): ?>
+                <?php $ttd_path = "public/ttd/" . $data['ttd_pejabat']; ?>
+                <img src="<?php echo $ttd_path; ?>" 
+                     alt="Tanda Tangan" 
+                     style="height: 100px; margin: 10px 0;">
+            <?php else: ?>
+                <div class="ttd-line"></div>
+            <?php endif; ?>
             <p>Tanda Tangan & Nama Jelas</p>
         </div>
     </div>
@@ -305,5 +342,29 @@ if ($data['tipe_surat'] == 'dana') {
         <button onclick="window.print()">Print</button>
         <button onclick="window.close()">Tutup</button>
     </div>
+
+    <script>
+    function updateTTD() {
+        const ttdSelect = document.getElementById('ttdSelect');
+        const selectedTTD = ttdSelect.value;
+        const suratId = <?php echo $id; ?>;
+
+        fetch('update_ttd.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${suratId}&ttd=${selectedTTD}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Gagal mengupdate tanda tangan');
+            }
+        });
+    }
+    </script>
 </body>
 </html> 
