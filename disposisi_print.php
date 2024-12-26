@@ -53,7 +53,6 @@ $bulan = date('n', strtotime($data['tanggal_masuk']));
 $tahun = date('Y', strtotime($data['tanggal_masuk']));  
 $bulan_romawi = numberToRoman($bulan);
 
-// Generate nomor agenda berdasarkan tipe surat
 if ($data['tipe_surat'] == 'dana') {
     $nomor_urut = str_pad($data['nomor_urut_dana'], 4, '0', STR_PAD_LEFT);
 } else {
@@ -320,7 +319,7 @@ if ($data['tipe_surat'] == 'dana') {
                     <select id="ttdSelect" class="form-select mb-3" onchange="updateTTD()">
                         <option value="">Pilih Tanda Tangan</option>
                         <option value="ttddani.jpg" <?php echo ($data['ttd_pejabat'] == 'ttddani.jpg' ? 'selected' : ''); ?>>Dani</option>
-                        <option value="ttdmuhidan.jpg" <?php echo ($data['ttd_pejabat'] == 'ttdmuhidan.jpg' ? 'selected' : ''); ?>>Muhidan</option>
+                        <option value="ttdmuhidan.jpg" <?php echo ($data['ttd_pejabat'] == 'ttdmuhidan.jpg' ? 'selected' : ''); ?>>Muhidin</option>
                     </select>
                 </form>
             <?php endif; ?>
