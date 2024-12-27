@@ -75,7 +75,7 @@ if ($data['tipe_surat'] == 'dana') {
             line-height: 1.4;
             margin: 0;
             padding: 15px;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .kop-space {
@@ -85,22 +85,23 @@ if ($data['tipe_surat'] == 'dana') {
 
         .title {
             text-align: center;
+            color: #1e40af;
             margin-bottom: 5px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
         }
 
         .nomor-surat {
             text-align: center;
             margin-bottom: 20px;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .info-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            font-size: 11px;
+            font-size: 13px;
         }
 
         .info-table td {
@@ -111,7 +112,7 @@ if ($data['tipe_surat'] == 'dana') {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            font-size: 11px;
+            font-size: 13px;
         }
 
         .disposisi-table td, .disposisi-table th {
@@ -138,7 +139,7 @@ if ($data['tipe_surat'] == 'dana') {
 
         .yth-box {
             border: 1px solid #000;
-            min-height: 50px;
+            min-height: 100px;
             margin-bottom: 10px;
             padding: 5px;
         }
@@ -310,7 +311,6 @@ if ($data['tipe_surat'] == 'dana') {
     <div class="bottom-section">
         <div class="catatan">
             <p><strong>Catatan:</strong></p>
-            <div style="min-height: 80px; border-bottom: 1px solid #000;"></div>
         </div>
         
         <div class="ttd">
