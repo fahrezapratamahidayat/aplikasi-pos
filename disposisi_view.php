@@ -34,9 +34,13 @@ function numberToRoman($number) {
 
 $id = $_GET['id'];
 
-$query = "SELECT sm.*, d.*, 
-          DATE_FORMAT(d.tanggal_masuk, '%m') as bulan,
-          YEAR(d.tanggal_masuk) as tahun,
+$query = "SELECT 
+          sm.*, 
+          d.*, 
+          DATE_FORMAT(sm.tanggal, '%d/%m/%Y') as tanggal_surat,
+          DATE_FORMAT(sm.tanggal_masuk, '%d/%m/%Y') as tgl_masuk,
+          DATE_FORMAT(sm.tanggal_masuk, '%m') as bulan,
+          YEAR(sm.tanggal_masuk) as tahun,
           sm.tipe_surat
           FROM pos_masuk sm 
           LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id 
@@ -47,6 +51,22 @@ $data = mysqli_fetch_assoc($result);
 if (!$data) {
     header("Location: surat_masuk.php");
     exit();
+}
+
+$bulan = date('n', strtotime($data['tanggal_masuk']));
+$tahun = date('Y', strtotime($data['tanggal_masuk']));
+$bulan_romawi = numberToRoman($bulan);
+
+if ($data['tipe_surat'] == 'dana') {
+    $nomor_urut = str_pad($data['nomor_urut_dana'], 4, '0', STR_PAD_LEFT);
+} else {
+    $nomor_urut = str_pad($data['nomor_urut_umum'], 4, '0', STR_PAD_LEFT);
+}
+
+if ($data['tipe_surat'] == 'dana') {
+    $nomor_agenda = "{$nomor_urut}/D/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
+} else {
+    $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$tahun}";
 }
 ?>
 
@@ -511,20 +531,24 @@ if (!$data) {
                                 <h5 class="border-bottom pb-2">Informasi Surat</h5>
                                 <table class="table table-borderless">
                                     <tr>
-                                        <td width="150">Tanggal Surat</td>
-                                        <td>: <?php echo date('d/m/Y', strtotime($data['tanggal'])); ?></td>
+                                        <td width="150" style="white-space: nowrap;">Tanggal Surat</td>
+                                        <td style="width: 10px;">:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['tanggal_surat']; ?></div></td>
                                     </tr>
                                     <tr>
-                                        <td>Jenis Surat</td>
-                                        <td>: <?php echo $data['jenis_surat']; ?></td>
+                                        <td style="white-space: nowrap;">Jenis Surat</td>
+                                        <td>:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['jenis_surat']; ?></div></td>
                                     </tr>
                                     <tr>
-                                        <td>Perihal</td>
-                                        <td>: <?php echo $data['perihal']; ?></td>
+                                        <td style="white-space: nowrap;">Perihal</td>
+                                        <td>:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['perihal']; ?></div></td>
                                     </tr>
                                     <tr>
-                                        <td>Asal Surat</td>
-                                        <td>: <?php echo $data['asal_surat']; ?></td>
+                                        <td style="white-space: nowrap;">Asal Surat</td>
+                                        <td>:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['asal_surat']; ?></div></td>
                                     </tr>
                                 </table>
                             </div>
@@ -532,39 +556,29 @@ if (!$data) {
                                 <h5 class="border-bottom pb-2">Informasi Disposisi</h5>
                                 <table class="table table-borderless">
                                     <tr>
-                                        <td width="150">Nomor Agenda</td>
-                                        <?php
-                                        if ($data['tipe_surat'] == 'dana') {
-                                            $nomor_urut = str_pad($data['nomor_urut_dana'], 4, '0', STR_PAD_LEFT);
-                                        } else {
-                                            $nomor_urut = str_pad($data['nomor_urut_umum'], 4, '0', STR_PAD_LEFT);
-                                        }
-                                        $bulan_romawi = numberToRoman(intval($data['bulan']));
-
-                                        // Format nomor agenda berdasarkan tipe surat
-                                        if ($data['tipe_surat'] == 'dana') {
-                                            $nomor_agenda = "{$nomor_urut}/D/FSI-UNJANI/{$bulan_romawi}/{$data['tahun']}";
-                                        } else {
-                                            $nomor_agenda = "{$nomor_urut}/U/FSI-UNJANI/{$bulan_romawi}/{$data['tahun']}";
-                                        }
-                                        ?>
-                                        <td>: <?php echo $nomor_agenda; ?></td>
+                                        <td width="150" style="white-space: nowrap;">Nomor Agenda</td>
+                                        <td style="width: 10px;">:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $nomor_agenda; ?></div></td>
                                     </tr>
                                     <tr>
-                                        <td>Nomor Surat</td>
-                                        <td>: <?php echo $data['nomor_surat']; ?></td>
+                                        <td style="white-space: nowrap;">Nomor Surat</td>
+                                        <td>:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['nomor_surat']; ?></div></td>
                                     </tr>
                                     <tr>
-                                        <td>Tanggal Masuk</td>
-                                        <td>: <?php echo date('d/m/Y', strtotime($data['tanggal_masuk'])); ?></td>
+                                        <td style="white-space: nowrap;">Tanggal Masuk</td>
+                                        <td>:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['tgl_masuk']; ?></div></td>
                                     </tr>
                                     <tr>
-                                        <td>Dari</td>
-                                        <td>: <?php echo $data['dari']; ?></td>
+                                        <td style="white-space: nowrap;">Dari</td>
+                                        <td>:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['dari'] ?? $data['asal_surat']; ?></div></td>
                                     </tr>
                                     <tr>
-                                        <td>Tujuan</td>
-                                        <td>: <?php echo $data['tujuan']; ?></td>
+                                        <td style="white-space: nowrap;">Tujuan</td>
+                                        <td>:</td>
+                                        <td><div style="word-wrap: break-word; max-width: 300px;"><?php echo $data['tujuan']; ?></div></td>
                                     </tr>
                                 </table>
                             </div>
