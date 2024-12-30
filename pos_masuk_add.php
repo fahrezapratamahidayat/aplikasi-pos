@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($_POST['submit_surat'])) {
         mysqli_begin_transaction($conn);
         try {
-            // Simpan surat masuk terlebih dahulu
             $tanggal = $_POST['tanggal'];
             $tanggal_masuk = $_POST['tanggal_masuk'];
             $nomor_surat = $_POST['nomor_surat'];
@@ -34,12 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 throw new Exception("Tanggal harus diisi!");
             }
 
-            // Tambahkan validasi nomor surat
             if(empty($nomor_surat)) {
                 throw new Exception("Nomor surat harus diisi!");
             }
-
-            // Cek apakah nomor surat sudah ada
             $check_query = "SELECT id FROM pos_masuk WHERE nomor_surat = ?";
             $check_stmt = mysqli_prepare($conn, $check_query);
             mysqli_stmt_bind_param($check_stmt, "s", $nomor_surat);
@@ -68,8 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 throw new Exception("File surat harus diupload!");
             }
-
-            // masukan surat masukk
             $query = "INSERT INTO pos_masuk (tanggal, tanggal_masuk, nomor_surat, jenis_surat, perihal, asal_surat, file_surat, keterangan, tipe_surat) 
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'umum')";
             
@@ -83,11 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $surat_id = mysqli_insert_id($conn);
             mysqli_stmt_close($stmt);
 
-            // simpan disposisi
             $bulan = date('n', strtotime($tanggal));
             $tahun = date('Y', strtotime($tanggal));
 
-            // Simpan disposisi dengan nomor urut otomatis
             $query = "INSERT INTO disposisi (surat_masuk_id, dari, tanggal_masuk, perihal, tujuan, nomor_surat) 
                       VALUES (?, ?, ?, ?, ?, ?)";
 
