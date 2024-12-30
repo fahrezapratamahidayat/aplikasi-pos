@@ -115,6 +115,7 @@ if ($data['tipe_surat'] == 'dana') {
             margin: 0 auto;
             max-width: 1000px;
             font-size: 15px;
+            margin-bottom: 20px;
         }
 
         .info-table td {
