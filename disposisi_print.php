@@ -87,7 +87,7 @@ if ($data['tipe_surat'] == 'dana') {
             line-height: 1.4;
             margin: 0;
             padding: 15px;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .kop-space {
@@ -112,13 +112,14 @@ if ($data['tipe_surat'] == 'dana') {
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 0px;
+            margin: 0 auto;
+            max-width: 1000px;
             font-size: 15px;
         }
 
         .info-table td {
             padding: 0px;
-            vertical-align: top;
+            vertical-align: middle;
         }
 
         .info-label {
