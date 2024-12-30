@@ -20,7 +20,7 @@ $id = $_GET['id'];
 
 $query = "SELECT sm.*, d.*, 
           DATE_FORMAT(sm.tanggal, '%d/%m/%Y') as tanggal_surat,
-          DATE_FORMAT(d.tanggal_masuk, '%d/%m/%Y') as tgl_masuk,
+          DATE_FORMAT(sm.tanggal_masuk, '%d/%m/%Y') as tgl_masuk,
           sm.tipe_surat
           FROM pos_masuk sm 
           LEFT JOIN disposisi d ON sm.id = d.surat_masuk_id 
@@ -33,11 +33,22 @@ if (!$data) {
     exit();
 }
 
-function numberToRoman($number) {
+function numberToRoman($number)
+{
     $map = array(
-        'M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400,
-        'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40,
-        'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1
+        'M' => 1000,
+        'CM' => 900,
+        'D' => 500,
+        'CD' => 400,
+        'C' => 100,
+        'XC' => 90,
+        'L' => 50,
+        'XL' => 40,
+        'X' => 10,
+        'IX' => 9,
+        'V' => 5,
+        'IV' => 4,
+        'I' => 1
     );
     $result = '';
     foreach ($map as $roman => $value) {
@@ -50,7 +61,7 @@ function numberToRoman($number) {
 }
 
 $bulan = date('n', strtotime($data['tanggal_masuk']));
-$tahun = date('Y', strtotime($data['tanggal_masuk']));  
+$tahun = date('Y', strtotime($data['tanggal_masuk']));
 $bulan_romawi = numberToRoman($bulan);
 
 if ($data['tipe_surat'] == 'dana') {
@@ -67,6 +78,7 @@ if ($data['tipe_surat'] == 'dana') {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Print Disposisi</title>
     <style>
@@ -79,7 +91,7 @@ if ($data['tipe_surat'] == 'dana') {
         }
 
         .kop-space {
-            width: 1655px;
+            width: 1653px;
             height: 219px;
         }
 
@@ -87,50 +99,68 @@ if ($data['tipe_surat'] == 'dana') {
             text-align: center;
             color: #1e40af;
             margin-bottom: 5px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
 
         .nomor-surat {
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 14px;
+            margin-bottom: 10px;
+            font-size: 15px;
         }
 
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 13px;
+            margin-bottom: 0px;
+            font-size: 15px;
         }
 
         .info-table td {
-            padding: 5px;
+            padding: 0px;
+            vertical-align: top;
+        }
+
+        .info-label {
+            white-space: nowrap;
+        }
+
+        .separator {
+            text-align: center;
+        }
+
+        .info-content {
+            padding-left: 5px;
+            max-width: 250px; /* Atur Atur disini */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
         }
 
         .disposisi-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 15px;
-            font-size: 13px;
+            font-size: 15px;
         }
 
-        .disposisi-table td, .disposisi-table th {
+        .disposisi-table td,
+        .disposisi-table th {
             padding: 5px;
             border: 0.5px solid #999;
             vertical-align: top;
         }
 
         .disposisi-table td:first-child {
-            width: 30%;
+            width: 0, 5%;
         }
 
         .disposisi-table td:nth-child(2) {
-            width: 35%;
+            width: 0, 5%;
         }
 
         .disposisi-table td:nth-child(3) {
-            width: 35%;
+            width: 0, 5%;
         }
 
         .yth-section {
@@ -141,7 +171,7 @@ if ($data['tipe_surat'] == 'dana') {
             border: 1px solid #000;
             min-height: 100px;
             margin-bottom: 10px;
-            padding: 5px;
+            padding: 10px;
         }
 
         .bottom-section {
@@ -151,11 +181,11 @@ if ($data['tipe_surat'] == 'dana') {
         }
 
         .catatan {
-            width: 45%;
+            width: 30%;
         }
 
         .ttd {
-            width: 45%;
+            width: 30%;
             text-align: center;
         }
 
@@ -171,7 +201,7 @@ if ($data['tipe_surat'] == 'dana') {
         }
 
         .disposisi-column {
-            width: 48%;
+            width: 30%;
         }
 
         .checkbox-item {
@@ -196,7 +226,8 @@ if ($data['tipe_surat'] == 'dana') {
             vertical-align: top;
         }
 
-        .disposisi-table td, .disposisi-table th {
+        .disposisi-table td,
+        .disposisi-table th {
             border: 0.5px solid #000;
         }
 
@@ -211,16 +242,19 @@ if ($data['tipe_surat'] == 'dana') {
             background-color: #fff;
             border: 1px solid #ced4da;
             border-radius: 0.25rem;
-            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         }
-        
+
         @media print {
-            .no-print, .form-select {
+
+            .no-print,
+            .form-select {
                 display: none !important;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="kop-space"></div>
 
@@ -229,26 +263,33 @@ if ($data['tipe_surat'] == 'dana') {
 
     <table class="info-table">
         <tr>
-            <td width="20%">Tanggal Masuk</td>
-            <td width="30%">: <?php echo $data['tgl_masuk']; ?></td>
-            <td width="20%">Dari</td>
-            <td width="30%">: <?php echo $data['dari']; ?></td>
+            <td class="info-label">Tanggal Masuk</td>
+            <td class="separator">:</td>
+            <td width="30%"><div class="info-content"><?php echo $data['tgl_masuk']; ?></div></td>
+            <td class="info-label">Dari</td>
+            <td class="separator">:</td>
+            <td width="30%"><div class="info-content"><?php echo $data['dari']; ?></div></td>
         </tr>
         <tr>
-            <td>Tanggal Surat</td>
-            <td>: <?php echo $data['tanggal_surat']; ?></td>
-            <td>Ditujukan Yth</td>
-            <td>: <?php echo $data['tujuan']; ?></td>
+            <td class="info-label">Tanggal Surat</td>
+            <td class="separator">:</td>
+            <td><div class="info-content"><?php echo $data['tanggal_surat']; ?></div></td>
+            <td class="info-label">Ditujukan Yth</td>
+            <td class="separator">:</td>
+            <td><div class="info-content"><?php echo $data['tujuan']; ?></div></td>
         </tr>
         <tr>
-            <td>Lampiran</td>
-            <td>: </td>
-            <td>No Surat</td>
-            <td>: <?php echo $data['nomor_surat']; ?></td>
+            <td class="info-label">Lampiran</td>
+            <td class="separator">:</td>
+            <td><div class="info-content"></div></td>
+            <td class="info-label">No Surat</td>
+            <td class="separator">:</td>
+            <td><div class="info-content"><?php echo $data['nomor_surat']; ?></div></td>
         </tr>
         <tr>
-            <td>Perihal</td>
-            <td colspan="3">: <?php echo $data['perihal']; ?></td>
+            <td class="info-label">Perihal</td>
+            <td class="separator">:</td>
+            <td ><div class="info-content"><?php echo $data['perihal']; ?></div></td>
         </tr>
     </table>
 
@@ -259,18 +300,18 @@ if ($data['tipe_surat'] == 'dana') {
         </tr>
         <tr>
             <td>
-                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan 1</div>
-                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan 2</div>
-                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan 3</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 1</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 2</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 3</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 4</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 5</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaprodi 6</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaur 1</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaur 2</div>
-                <div class="checkbox-item"><span class="item-space"></span>Kaur 3</div>
+                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan I</div>
+                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan II</div>
+                <div class="checkbox-item"><span class="item-space"></span>Wakil Dekan III</div>
+                <div class="checkbox-item"><span class="item-space"></span>Ka.Prodi. Kimia</div>
+                <div class="checkbox-item"><span class="item-space"></span>Ka. Prodi.Informatika</div>
+                <div class="checkbox-item"><span class="item-space"></span>Ka. Prodi Sistem Informasi</div>
+                <div class="checkbox-item"><span class="item-space"></span>Ka. Prodi. Magister (S2) Kimia</div>
+                <div class="checkbox-item"><span class="item-space"></span>Ka. Prodi. Magister (S2)Informatika</div>
+                <div class="checkbox-item"><span class="item-space"></span>Ka. Bag.Tata Usaha</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaur ..........</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaur ..........</div>
+                <div class="checkbox-item"><span class="item-space"></span>Kaur ..........</div>
             </td>
             <td>
                 <div class="checkbox-item"><span class="item-space"></span>Untuk diketahui</div>
@@ -300,10 +341,10 @@ if ($data['tipe_surat'] == 'dana') {
     <div class="yth-section">
         <p><strong>Yth:</strong></p>
         <div class="yth-box"></div>
-        
+
         <p><strong>Yth:</strong></p>
         <div class="yth-box"></div>
-        
+
         <p><strong>Yth:</strong></p>
         <div class="yth-box"></div>
     </div>
@@ -312,7 +353,7 @@ if ($data['tipe_surat'] == 'dana') {
         <div class="catatan">
             <p><strong>Catatan:</strong></p>
         </div>
-        
+
         <div class="ttd">
             <?php if (!isset($_GET['preview'])): ?>
                 <form id="ttdForm">
@@ -323,13 +364,13 @@ if ($data['tipe_surat'] == 'dana') {
                     </select>
                 </form>
             <?php endif; ?>
-            
+
             <p>Kaur. Administrasi Umum</p>
             <?php if (isset($data['ttd_pejabat']) && !empty($data['ttd_pejabat'])): ?>
                 <?php $ttd_path = "public/ttd/" . $data['ttd_pejabat']; ?>
-                <img src="<?php echo $ttd_path; ?>" 
-                     alt="Tanda Tangan" 
-                     style="height: 100px; margin: 10px 0;">
+                <img src="<?php echo $ttd_path; ?>"
+                    alt="Tanda Tangan"
+                    style="height: 100px; margin: 10px 0;">
             <?php else: ?>
                 <div class="ttd-line"></div>
             <?php endif; ?>
@@ -343,27 +384,28 @@ if ($data['tipe_surat'] == 'dana') {
     </div>
 
     <script>
-    function updateTTD() {
-        const ttdSelect = document.getElementById('ttdSelect');
-        const selectedTTD = ttdSelect.value;
-        const suratId = <?php echo $id; ?>;
+        function updateTTD() {
+            const ttdSelect = document.getElementById('ttdSelect');
+            const selectedTTD = ttdSelect.value;
+            const suratId = <?php echo $id; ?>;
 
-        fetch('update_ttd.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `id=${suratId}&ttd=${selectedTTD}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            } else {
-                alert('Gagal mengupdate tanda tangan');
-            }
-        });
-    }
+            fetch('update_ttd.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `id=${suratId}&ttd=${selectedTTD}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Gagal mengupdate tanda tangan');
+                }
+            });
+        }
     </script>
 </body>
-</html> 
+
+</html>
