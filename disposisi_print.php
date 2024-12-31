@@ -112,10 +112,10 @@ if ($data['tipe_surat'] == 'dana') {
         .info-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0 auto;
             max-width: 1000px;
             font-size: 15px;
             margin-bottom: 20px;
+            margin-left:20px;
         }
 
         .info-table td {
@@ -124,16 +124,16 @@ if ($data['tipe_surat'] == 'dana') {
         }
 
         .info-label {
+            width: 120px;
             white-space: nowrap;
         }
 
         .separator {
-            text-align: center;
+            text-align: left;
         }
 
         .info-content {
             padding-left: 5px;
-            max-width: 250px; /* Atur Atur disini */
             overflow-wrap: break-word;
             word-wrap: break-word;
             hyphens: auto;
@@ -267,16 +267,16 @@ if ($data['tipe_surat'] == 'dana') {
         <tr>
             <td class="info-label">Tanggal Masuk</td>
             <td class="separator">:</td>
-            <td width="30%"><div class="info-content"><?php echo $data['tgl_masuk']; ?></div></td>
-            <td class="info-label">Dari</td>
+            <td width="35%"><div class="info-content"><?php echo $data['tgl_masuk']; ?></div></td>
+            <td class="info-label" style="margin-left: 200px;">Dari</td>
             <td class="separator">:</td>
-            <td width="30%"><div class="info-content"><?php echo $data['dari']; ?></div></td>
+            <td width=""><div class="info-content"><?php echo $data['dari']; ?></div></td>
         </tr>
         <tr>
             <td class="info-label">Tanggal Surat</td>
             <td class="separator">:</td>
             <td><div class="info-content"><?php echo $data['tanggal_surat']; ?></div></td>
-            <td class="info-label">Ditujukan Yth</td>
+            <td class="info-label" style="margin-left: 200px;">Ditujukan Yth</td>
             <td class="separator">:</td>
             <td><div class="info-content"><?php echo $data['tujuan']; ?></div></td>
         </tr>
@@ -284,7 +284,7 @@ if ($data['tipe_surat'] == 'dana') {
             <td class="info-label">Lampiran</td>
             <td class="separator">:</td>
             <td><div class="info-content"></div></td>
-            <td class="info-label">No Surat</td>
+            <td class="info-label" style="margin-left: 200px;">No Surat</td>
             <td class="separator">:</td>
             <td><div class="info-content"><?php echo $data['nomor_surat']; ?></div></td>
         </tr>
